@@ -3,7 +3,7 @@ This repository contains a copy of Jacob J. A. Koot's
 
 http://telefonica.net/web2/koot/
 
-From his original .doc document, and .odt and .pdf file
-were generated.
+From his original .doc document, the .odt and .pdf files
+were generated using OpenOffice 2.4.
 
 

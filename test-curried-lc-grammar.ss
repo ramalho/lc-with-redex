@@ -1,0 +1,32 @@
+#lang scheme ; File test-curried-lc-grammar.ss
+(require redex "curried-lc-grammar.ss" "tools.ss")
+(printf "~a~n" "test-curried-lc-grammar")
+
+(redex-check curried-lc-grammar ‹term›
+ (or
+  (term (Var?   ‹term›))
+  (term (Abstr? ‹term›))
+  (term (Appl?  ‹term›)))
+ #:attempts 10000 #:retries 100)
+
+(test-false (term (Term?  123)))
+(test-false (term (Var?   123)))
+(test-false (term (Abstr? 123)))
+(test-false (term (Appl?  123)))
+(test-true  (term (Term?  x)))
+(test-true  (term (Var?   x)))
+(test-false (term (Abstr? x)))
+(test-false (term (Appl?  x)))
+(test-true  (term (Term?  (x y))))
+(test-false (term (Var?   (x y))))
+(test-false (term (Abstr? (x y))))
+(test-true  (term (Appl?  (x y))))
+(test-true  (term (Term?  (λ (x) y))))
+(test-false (term (Var?   (λ (x) y))))
+(test-true  (term (Abstr? (λ (x) y))))
+(test-false (term (Appl?  (λ (x) y))))
+(test-false (term (Term?  λ)))
+(test-false (term (Term?  (λ (x y) z))))
+(test-false (term (Term?  (λ (x)))))
+(test-false (term (Term?  (x y z))))
+(test-results)

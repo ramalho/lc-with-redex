@@ -1,5 +1,4 @@
 #lang scheme ; File all-tests.ss
-(require "test-free-vars-in-scheme.ss")
 (require "test-curried-lc-grammar.ss")
 (require "test-free-vars.ss")
 (require "test-alpha-congruence.ss")

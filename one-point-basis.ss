@@ -1,6 +1,14 @@
 #lang scheme ; File one-point-basis
 (require redex "curry.ss" "curried-lc-grammar.ss" "free-vars.ss")
+(require "lazy-evaluator.ss")
 (printf "~a~n" "one-point-basis")
+
+(def-proc 'X
+ (let ((K '(λ (x y) x)) (S '(λ (x y z) ((x z) (y z)))))
+  (term (Curry (λ (x) (x ,K ,S ,K))))))
+
+(define-language x-term (‹xterm› (variable-except λ) (‹xterm› ‹xterm›)))
+(define-metafunction x-term check-xterm : ‹xterm› -> #t ((check-xterm ‹xterm›) #t))
 
 (define-metafunction curried-lc-grammar Trafo : ‹term› -> ‹term›
  ((Trafo I) (Trafo ((S K) K)))
@@ -19,21 +27,13 @@
  ((Trafo (λ (‹var›) ‹term›)) (Trafo (λ (‹var›) (Trafo ‹term›))))
  ((Trafo (‹term›_0 ‹term›_1)) ((Trafo ‹term›_0) (Trafo ‹term›_1))))
 
-(define K (term (Curry (λ (x y) x))))
-(define S (term (Curry (λ (x y z) ((x z) (y z))))))
-(define X (term (Curry (λ (x) (x ,K ,S ,K)))))
-(define ns (make-base-namespace))
-(define (ev x) (eval x ns))
-(ev '(require "free-vars-in-scheme.ss"))
-
 (define-syntax test
  (syntax-rules ()
   ((_ p q)
-   (let* ((x (term (Trafo (Curry p)))) (x-term (term ((λ (X) ,x) ,X))))
-    (printf "~s ->~n" 'x)
-    (pretty-display x)
-    (printf "-> ~s~n~n" 'q)
-    (test-equal (ev x-term) 'q)))))
+   (let* ((x (term (Trafo (Curry p)))))
+    (printf "~s ->~n" 'p) (pretty-display x) (printf "-> ~s~n~n" 'q)
+    (term (check-xterm ,x)) ; Checks Trafo to produce an ‹xterm›.
+    (test-equal (ev-proc x) 'q)))))
 
 (test ((λ (x) x) yes) yes)
 (test ((λ (x y) x) yes no) yes)

@@ -1,10 +1,12 @@
 #lang scheme ; File lazy-evaluator.ss
 #|
-Syntax: (ev term) -> value of the term
+Procedure: (ev-proc ‹term›) -> value of the ‹term›.
 Curries the term and evaluates it in the current environment. Free variables are allowed and self-evaluating. When an application is evaluated, the operator must be a function. The actual-argument is not evaluated, but wrapped in a promise. The value of an abstraction is a procedure of one argument. If this procedure receives a promise for its argument, the promise will be forced when needed.
 
-Syntax: (def var term)
-First evaluates the term in the current environment, then adds the binding (var value-of-term) to the current environment. It is allowed to shadow an existing binding.
+Syntax: (ev ‹term›) => (ev-proc (term ‹term›))
+
+Syntax: (def ‹var› ‹term›)
+Adds a binding (‹var› ‹value›) to the current environment, where the value is in fact a promise to evaluate the term in the environment that was the current one before adding the binding. It is allowed to shadow an existing binding. This does not affect the values of any bindings that may already exists.
 
 Procedure (list-env) -> list of variables
 Returns the list of all variables bound in the current environment. Shadowed variables are included.
@@ -13,16 +15,11 @@ Returns the list of all variables bound in the current environment. Shadowed var
 Clears the current environment.
 
 |#
-(provide ev def list-env list-vars clear-env)
-
-(define-syntax ev
- (syntax-rules ()
-  ((_ x) (ev-aux 'x env))))
-
-(define-syntax (def stx)
- (syntax-case stx ()
-  ((_ var x)
- #'(extend-env 'var (let ((e env)) (lazy (ev-aux 'x e)))))))
+(provide ev-proc ev def-proc def list-env list-vars clear-env)
+(define (ev-proc x) (ev-aux x env))
+(define (def-proc var x) (extend-env var (let ((e env)) (lazy (ev-aux x e)))))
+(define-syntax ev (syntax-rules () ((_ x) (ev-proc 'x))))
+(define-syntax def (syntax-rules () ((_ var x) (def-proc 'var 'x))))
 
 (define (ev-aux x env)
  (cond

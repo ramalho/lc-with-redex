@@ -14,12 +14,7 @@
 (define (list-terms n) ; Lists all terms with n occurrences of X.
  (case n
   ((0) '( ))  ((1) '(X))
-  (else (remove-dups (apply append (map apply-extend (list-terms (sub1 n))))))))
-
-(define (remove-dups x)
- (if (null? x) '( )
-  (let ((kar (car x)) (kdr (remove-dups (cdr x))))
-   (if (member kar kdr) kdr (cons kar kdr)))))
+  (else (remove-duplicates (apply append (map apply-extend (list-terms (sub1 n))))))))
 
 (define-metafunction x-lang Term<? : ‹term› ‹term› -> any
  ((Term<? X X) #f)

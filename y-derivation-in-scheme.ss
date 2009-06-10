@@ -91,7 +91,7 @@ Function (λ (n) ...) contains the subexpression (make-factorial make-factorial)
 
 (factorial-8 4)
 
-#|Function (λ (factorial-maker) ...) Does not refer to make-factorial. Therefore it can lifted to out. We call it m.|#
+#|Function (λ (factorial) ...) Does not refer to make-factorial. Therefore it can lifted to out. We call it m.|#
 
 ; Version 9
 
@@ -131,7 +131,7 @@ Function (λ (n) ...) contains the subexpression (make-factorial make-factorial)
   (λ (length) (λ (lyst) (if (null? lyst) 0 (add1 (length (cdr lyst)))))))
 '(a b c d e f g h i j k l m n o p q r s t u v w x))
 
-#|Function (λ (m) ...) is usually called Y, in this case an applicative order Y combinator. Applicative order, because it is suited to applicative order evaluation as in Scheme. This means that an actual argument is evaluated before its value is passed to the function that needs it. It also is important that a function does not evaluate its body until it is called. Well it can't, because it needs a value for its formal arguments. However it must not even evaluate parts of its body that do not depend on the formal arguments, unless an optimizer can prove that the evaluation does no harm. Y is called a combinator because it only contains references to variables that are bound within Y. That is the definition of a combinator.|#
+#|Function (λ (m) ...) is usually called Y, in this case an applicative order Y combinator. Applicative order, because it is suited to applicative order evaluation as in Scheme. This means that an actual argument is evaluated before its value is passed to the function that needs it. It also is important that a function does not evaluate its body until it is called. Well it can't, because it needs values for its formal arguments. However it must not even evaluate parts of its body that do not depend on the formal arguments, unless an optimizer can prove that the evaluation does no harm. Y is called a combinator because it only contains references to variables that are bound within Y. That is the definition of a combinator.|#
 
 ; Version 12
 (let*
@@ -165,9 +165,9 @@ Function (λ (n) ...) contains the subexpression (make-factorial make-factorial)
 (define Y-14
  ((λ (x) (x x x x x x x x x x x x x x x x x x x x x x x x x x x))
   (λ (a b c d e f g h i j k l m n o p q r s t u v w x y z)
-   (λ (ρ)
-    (λ (ξ)
-     ((ρ ((t h i s i s a f i x e d p o i n t c o m b i n a t o r) ρ)) ξ))))))
+   (λ (u)
+    (λ (v)
+     ((u ((t h i s i s a f i x e d p o i n t c o m b i n a t o r) u)) v))))))
 
 ((Y-14 (λ (factorial) (λ (n) (if (zero? n) 1 (* n (factorial (sub1 n))))))) 4)
 
@@ -181,7 +181,7 @@ Function (λ (n) ...) contains the subexpression (make-factorial make-factorial)
 (define Y-15
  ((λ (x) (x x x x x x x x x x x x x x x x x x x x x x x x x x))
   (λ (a b c d e f g h i j k l m n o p q s t u v w x y z)
-   (λ (r) (λ (λ) ((r ((x x x x x x x x x x x x x x x x x x x x x x x x x x) r)) λ))))))
+   (λ (u) (λ (v) ((u ((x x x x x x x x x x x x x x x x x x x x x x x x x x) u)) v))))))
                       
 ((Y-15 (λ (factorial) (λ (n) (if (zero? n) 1 (* n (factorial (sub1 n))))))) 4)
 

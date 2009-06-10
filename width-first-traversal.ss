@@ -8,7 +8,7 @@ G : T -> (T ...)  ; graph.
 
 Procedure G represents a graph. It is called with a node T for its argument and is assumed to return the list of all nodes having an inbound branch from node T. The returned list may contain duplicates, but they will be ignored by procedure traverse-graph. Nodes are compared to each other with procedure equal?. G is called exactly once for every node that can be reached from node S, node S included.
 
-Let V be the set of all nodes reachable from S. If V is finite, then procedure traversal halts after having processed all elements of V. If V infinite, then procedure traverse-graph never returns. If T is an arbitrary element of V, then procedure traverse-graph guarantees that node T will be found and G will once be called with node T, even in case V is infinite. V being infinite may require much time and memory. In this case G may be designed such as to put a limit on the number of nodes and to escape to a continuation when the limit is exceeded.
+Let V be the set of all nodes reachable from S. If V is finite, then procedure traversal halts after having processed all elements of V. If V is infinite, then procedure traverse-graph never returns. If T is an arbitrary element of V, then procedure traverse-graph guarantees that node T will be found and G will once be called with node T, even in case V is infinite. If V is infinite G may be designed such as to put a limit on the number of nodes and to escape to a continuation when the limit is exceeded.
 
 Legend:
 H : hash((T . #f) ...) done, hash of nodes already processed.
@@ -71,7 +71,7 @@ F : (T ...) frontier, list of nodes whose outbound branches have not yet been tr
  (define nodes (build-list n (λ (k) k)))
  (define H (make-hash))
  (define (G T)
-  (when (hash-has-key? H T) (error 'test-fully-connected  "duplicate node in: ~s" H))
+  (when (hash-has-key? H T) (error 'test-fully-connected "duplicate node ~s" T))
   (hash-set! H T #t)
   nodes)
  (traverse-graph 0 G)

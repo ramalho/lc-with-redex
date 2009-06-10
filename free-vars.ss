@@ -26,7 +26,7 @@
   (‹var›_1 ... ‹var›_2 ...))
  ((Remove-var ‹var› (‹var›_0 ...)) (‹var›_0 ...)))
 
-(define-metafunction curried-lc-grammar Var-free-in? : ‹var› ‹term› -> any
+(define-metafunction curried-lc-grammar Var-free-in? : ‹var› ‹term› -> ‹bool›
  ((Var-free-in? ‹var›_0 ‹var›_0) #t)
  ((Var-free-in? ‹var›_0 ‹var›_1) #f)
  ((Var-free-in? ‹var›_0 (λ (‹var›_0) ‹term›)) #f)
